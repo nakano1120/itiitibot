@@ -1,1 +1,1 @@
-web: python run.py
+web: PYTHONPATH="." python run.py
