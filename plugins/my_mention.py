@@ -67,7 +67,7 @@ mon0={
 mon1={'物体にはたらく力の合力が0ならば、運動している物体は等速直線運動を続け、静止している物体は静止し続ける。これを何と言う？（漢字＋ひらがな）':'慣性の法則'}
 mon2={'同じ元素からなるが、結晶構造の違いなどによって性質の異なる単体どうしの事を漢字三文字で何と言う？（漢字）':'同素体'}
 ans = '答え'
-@respond_to('quiz0')
+@listen_to('quiz0')
 def quiz0_func(message):
     global risten
     global ans
@@ -80,7 +80,7 @@ def quiz0_func(message):
     risten = 1
     ans = mon0[monban]
         
-@respond_to('quiz1')
+@listen_to('quiz1')
 def quiz1_func(message):
     global risten
     global ans
@@ -93,14 +93,14 @@ def quiz1_func(message):
     risten = 1
     ans = mon1[monban]
         
-@respond_to('help')
+@listen_to('help')
 def help_func(message):
-    message.send('botメンション時、quiz◯と入力すると問題が出題されます。')
+    message.send('quiz◯と入力すると問題が出題されます。')
     message.send('quiz0:クイズ quiz1:物理 quiz2:化学 quiz3:生物 quiz4:日本史 quiz5:世界史 quiz6:地理')
     message.send('回答するときは、「a」を入力し、回答権を得たら「a:答え」のように入力します。')
-    message.send('問題を飛ばしたいときは、メンションしながら「pass」と打ちます。')
+    message.send('問題を飛ばしたいときは、「pass」と打ちます。')
 
-@respond_to('pass')
+@listen_to('pass')
 def pas_func(message):
     global risten
     message.send('問題をパスします。')
@@ -112,6 +112,8 @@ def answer_func(message):
     global ansuser
     if risten == 0:
         return   
+    if answait == 1:
+        return
     message.reply('答えの前に qq を付けてチャットで回答してください。')
     ansuser = message.body['user']
     answait = 1
@@ -159,4 +161,43 @@ def rkaito_func(message):
     elif textet != ans:
         message.reply('残念。正解は ' + ans)
     answait = 0
+    risten = 0
+
+@respond_to('quiz0')
+def rquiz0_func(message):
+    global risten
+    global ans
+    if risten == 1:
+        return
+    message.send('問題です')
+    monban = random.choice(list(mon0.keys()))
+    time.sleep(1)
+    message.send(monban)
+    risten = 1
+    ans = mon0[monban]
+        
+@respond_to('quiz1')
+def rquiz1_func(message):
+    global risten
+    global ans
+    if risten == 1:
+        return
+    message.send('問題です')
+    monban = random.choice(list(mon1.keys()))
+    time.sleep(1)
+    message.send(monban)
+    risten = 1
+    ans = mon1[monban]
+        
+@respond_to('help')
+def rhelp_func(message):
+    message.send('quiz◯と入力すると問題が出題されます。')
+    message.send('quiz0:クイズ quiz1:物理 quiz2:化学 quiz3:生物 quiz4:日本史 quiz5:世界史 quiz6:地理')
+    message.send('回答するときは、「a」を入力し、回答権を得たら「a:答え」のように入力します。')
+    message.send('問題を飛ばしたいときは、「pass」と打ちます。')
+
+@respond_to('pass')
+def rpas_func(message):
+    global risten
+    message.send('問題をパスします。')
     risten = 0
