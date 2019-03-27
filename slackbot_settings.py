@@ -8,7 +8,7 @@ API_TOKEN = os.environ["SAMPLE_API_TOKEN"]
 DEFAULT_REPLY = "こんにちは"
 
 # 使用するPORT
-PORT = os.environ['PORT'] or 18080
+PORT = os.environ['PORT'] or 3000
 print(os.environ['PORT'])
 
 # プラグインスクリプトを置いてあるサブディレクトリ名のリスト
