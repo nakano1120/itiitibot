@@ -9,6 +9,7 @@ DEFAULT_REPLY = "こんにちは"
 
 # 使用するPORT
 PORT = os.environ['PORT'] or 18080
+print(os.environ['port'])
 
 # プラグインスクリプトを置いてあるサブディレクトリ名のリスト
 PLUGINS = ['plugins']
