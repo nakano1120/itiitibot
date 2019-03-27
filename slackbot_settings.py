@@ -1,4 +1,5 @@
 # coding: utf-8
+import os
 
 # botアカウントのトークンを指定
 API_TOKEN = os.environ["SAMPLE_API_TOKEN"]
