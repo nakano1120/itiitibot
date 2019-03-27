@@ -1,6 +1,5 @@
 # coding: utf-8
 import os
-import process
 
 # botアカウントのトークンを指定
 API_TOKEN = os.environ["SAMPLE_API_TOKEN"]
@@ -9,7 +8,7 @@ API_TOKEN = os.environ["SAMPLE_API_TOKEN"]
 DEFAULT_REPLY = "こんにちは"
 
 # 使用するPORT
-PORT = process.env.PORT or 5000
+PORT = os.environ['PORT'] or 5000
 
 # プラグインスクリプトを置いてあるサブディレクトリ名のリスト
 PLUGINS = ['plugins']
