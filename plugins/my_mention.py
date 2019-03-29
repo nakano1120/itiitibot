@@ -169,7 +169,7 @@ def rhelp_func(message):
     message.send('quiz0:クイズ quiz1:物理 quiz2:化学 quiz3:生物 quiz4:日本史 quiz5:世界史 quiz6:地理')
     message.send('回答するときは、「a」を入力し、回答権を得たら「a:答え」のように入力します。')
     message.send('問題を飛ばしたいときは、「pass」と打ちます。')
-    message.send('自分のランクを見るときは「rank」、問題を作るときは「makeq0 問題,答え」のように入力します')
+    message.send('自分のランクを見るときは「rank」、問題を作るときは「makeq0 問題 答え」のように入力します')
 
 @respond_to('pass')
 def rpas_func(message):
@@ -197,12 +197,14 @@ def rank_func(message):
 def rmake_func(message):
     text = message.body['text']
     texting = text.replace('makeq0', '')
-    if texting == '' or ',':
+    if texting == '':
+        message.send(texting)
         message.send('何らかのエラーが発生しました')
         return
-    texting.split(",")
-    qui = { texting[0]:texting[1] }
+    texting.split(" ")
+    qui = {texting[1]:texting[2]}
     fin = open('plugins/quiz.json', 'a')
-    json.dump(qui, fin)
+    json.dump(qui, fin, ensure_ascii=False, encoding='utf8')
+    message.send('保存完了')
     fin.close()
     
