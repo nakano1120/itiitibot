@@ -195,16 +195,16 @@ def rank_func(message):
     f.close()
 @respond_to(r'^makeq0')
 def rmake_func(message):
-    text = message.body['text']
-    texting = text.replace('makeq0', '')
-    if texting == '':
+    global nanka
+    texting = message.body['text']
+    if texting == 'makeq0 ':
         message.send(texting)
         message.send('何らかのエラーが発生しました')
         return
-    texting.split(" ")
-    qui = {texting[1]:texting[2]}
-    fin = open('plugins/quiz.json', 'a')
-    json.dump(qui, fin, ensure_ascii=False, encoding='utf8')
+    nanka,mo,ka= texting.split(" ")
+    qui = { mo:ka }
+    fin = codecs.open('plugins/quiz.json', 'a', "utf-8")
+    json.dump(qui, fin, ensure_ascii=False, indent=1)
     message.send('保存完了')
     fin.close()
     
