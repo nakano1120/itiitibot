@@ -232,3 +232,58 @@ def rspnews_func(message):
         message.send(link)
         message.send(title)
         break
+    f = open('plugins/quiz00.json','r')
+    df = json.load(f)
+    f.close()
+    df[userid]["point"] += 5
+    ff = open('plugins/quiz00.json','w')
+    json.dump(df, ff)
+    ff.close()
+
+@respond_to('itnews')
+def ritnews_func(message):
+    global yahoo_news_dic
+
+    RSS_URL = "https://news.yahoo.co.jp/pickup/computer/rss.xml"
+
+    yahoo_news_dic = feedparser.parse(RSS_URL)
+
+    message.send(yahoo_news_dic.feed.title)
+
+    for entry in yahoo_news_dic.entries:
+        title = entry.title
+        link  = entry.link
+        message.send(link)
+        message.send(title)
+        break
+    f = open('plugins/quiz00.json','r')
+    df = json.load(f)
+    f.close()
+    df[userid]["point"] += 5
+    ff = open('plugins/quiz00.json','w')
+    json.dump(df, ff)
+    ff.close()
+
+@respond_to('mainnews')
+def rmainnews_func(message):
+    global yahoo_news_dic
+
+    RSS_URL = "https://news.yahoo.co.jp/pickup/rss.xml"
+
+    yahoo_news_dic = feedparser.parse(RSS_URL)
+
+    message.send(yahoo_news_dic.feed.title)
+
+    for entry in yahoo_news_dic.entries:
+        title = entry.title
+        link  = entry.link
+        message.send(link)
+        message.send(title)
+        break
+    f = open('plugins/quiz00.json','r')
+    df = json.load(f)
+    f.close()
+    df[userid]["point"] += 5
+    ff = open('plugins/quiz00.json','w')
+    json.dump(df, ff)
+    ff.close()
