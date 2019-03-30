@@ -232,6 +232,7 @@ def rspnews_func(message):
         message.send(link)
         message.send(title)
         break
+    userid = message.body['user']
     f = open('plugins/quiz00.json','r')
     df = json.load(f)
     f.close()
@@ -256,6 +257,7 @@ def ritnews_func(message):
         message.send(link)
         message.send(title)
         break
+    userid = message.body['user']
     f = open('plugins/quiz00.json','r')
     df = json.load(f)
     f.close()
@@ -280,6 +282,7 @@ def rmainnews_func(message):
         message.send(link)
         message.send(title)
         break
+    userid = message.body['user']
     f = open('plugins/quiz00.json','r')
     df = json.load(f)
     f.close()
