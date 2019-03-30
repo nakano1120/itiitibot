@@ -4,6 +4,7 @@ import random
 import re
 import json
 import codecs
+import feedparser
 from slackbot.bot import respond_to     # @botname: で反応するデコーダ
 from slackbot.bot import listen_to      # チャネル内発言で反応するデコーダ
 from slackbot.bot import default_reply  # 該当する応答がない場合に反応するデコーダ
@@ -38,11 +39,11 @@ def quiz0_func(message):
     message.send('問題です')
     f = open('plugins/quiz.json', 'r')
     dd = json.load(f)
-    monban = random.choice(list(dd["mon0"].keys()))
+    monban = random.choice(list(dd.keys()))
     time.sleep(1)
     message.send(monban)
     risten = 1
-    ans = dd["mon0"][monban]
+    ans = dd[monban]
     f.close()
     userid = message.body['user']
     f = open('plugins/quiz00.json', 'r')
@@ -50,6 +51,9 @@ def quiz0_func(message):
     f.close()
     if userid in df.keys():
         df[userid]["point"] += 3
+        ff = open('plugins/quiz00.json','w')
+        json.dump(df, ff)
+        ff.close()
     else:
         f = open('plugins/quiz00.json', 'w')
         df[userid] = { "point" : 3 , "seikai" : 0 , "fuseikai" : 0}
@@ -116,6 +120,9 @@ def kaito_func(message):
         if userid in df.keys():
             df[userid]["point"] += 8
             df[userid]["seikai"] += 1
+            ff = open('plugins/quiz00.json','w')
+            json.dump(df, ff)
+            ff.close()
         else:
             df[userid] = { "point" : 8 , "seikai" : 1 , "fuseikai" : 0}
             ff = open('plugins/quiz00.json','w')
@@ -202,9 +209,26 @@ def rmake_func(message):
         message.send('何らかのエラーが発生しました')
         return
     nanka,mo,ka= texting.split(" ")
-    qui = { mo:ka }
+    qui = { mo : ka }
     fin = codecs.open('plugins/quiz.json', 'a', "utf-8")
     json.dump(qui, fin, ensure_ascii=False, indent=1)
     message.send('保存完了')
     fin.close()
-    
+#ここまでquiz機能
+#ここからおまけ
+@respond_to('spnews')
+def rspnews_func(message):
+    global yahoo_news_dic
+
+    RSS_URL = "https://news.yahoo.co.jp/pickup/sports/rss.xml"
+
+    yahoo_news_dic = feedparser.parse(RSS_URL)
+
+    message.send(yahoo_news_dic.feed.title)
+
+    for entry in yahoo_news_dic.entries:
+        title = entry.title
+        link  = entry.link
+        message.send(link)
+        message.send(title)
+        break
