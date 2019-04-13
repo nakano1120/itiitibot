@@ -200,7 +200,7 @@ def rpas_func(message):
     message.send('問題をパスします。')
     risten = 0
 
-@respond_to('rank')
+@listen_to('!rank')
 def rank_func(message):
     global userid
     global dd
