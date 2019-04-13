@@ -60,7 +60,23 @@ def quiz0_func(message):
         json.dump(df, f)
         f.close
 
-        
+@listen_to('')
+def level_func(message):
+    userid = message.body['user']
+    f = open('plugins/quiz00.json','r')
+    df = json.load(f)
+    f.close()
+    if userid in df.keys():
+        df[userid]["point"] += 1
+        ff = open('plugins/quiz00.json','w')
+        json.dump(df, ff)
+        ff.close()
+    else:
+        df[userid] = { "point" : 1 , "seikai" : 0 , "fuseikai" : 0}
+        ff = open('plugins/quiz00.json','w')
+        json.dump(df, ff)
+        ff.close()
+
 @listen_to('quiz1')
 def quiz1_func(message):
     global risten
