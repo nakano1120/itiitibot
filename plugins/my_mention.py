@@ -26,8 +26,6 @@ from slackbot.bot import default_reply  # 該当する応答がない場合に�
 #                               文字列中に':'はいらない
 risten = 0
 answait = 0
-mon1={'物体にはたらく力の合力が0ならば、運動している物体は等速直線運動を続け、静止している物体は静止し続ける。これを何と言う？（漢字＋ひらがな）':'慣性の法則'}
-mon2={'同じ元素からなるが、結晶構造の違いなどによって性質の異なる単体どうしの事を漢字三文字で何と言う？（漢字）':'同素体'}
 ans = '答え'
 @listen_to('quiz0')
 def quiz0_func(message):
@@ -45,50 +43,6 @@ def quiz0_func(message):
     risten = 1
     ans = dd[monban]
     f.close()
-    userid = message.body['user']
-    f = open('plugins/quiz00.json', 'r')
-    df = json.load(f)
-    f.close()
-    if userid in df.keys():
-        df[userid]["point"] += 3
-        ff = open('plugins/quiz00.json','w')
-        json.dump(df, ff)
-        ff.close()
-    else:
-        f = open('plugins/quiz00.json', 'w')
-        df[userid] = { "point" : 3 , "seikai" : 0 , "fuseikai" : 0}
-        json.dump(df, f)
-        f.close
-
-@listen_to('')
-def level_func(message):
-    userid = message.body['user']
-    f = open('plugins/quiz00.json','r')
-    df = json.load(f)
-    f.close()
-    if userid in df.keys():
-        df[userid]["point"] += 1
-        ff = open('plugins/quiz00.json','w')
-        json.dump(df, ff)
-        ff.close()
-    else:
-        df[userid] = { "point" : 1 , "seikai" : 0 , "fuseikai" : 0}
-        ff = open('plugins/quiz00.json','w')
-        json.dump(df, ff)
-        ff.close()
-
-@listen_to('quiz1')
-def quiz1_func(message):
-    global risten
-    global ans
-    if risten == 1:
-        return
-    message.send('問題です')
-    monban = random.choice(list(mon1.keys()))
-    time.sleep(1)
-    message.send(monban)
-    risten = 1
-    ans = mon1[monban]
         
 @listen_to('help')
 def help_func(message):
@@ -127,35 +81,10 @@ def kaito_func(message):
         return
     text = message.body['text']
     textet = text.replace('qq', '')
-    userid = message.body['user']
     if textet == ans:
         message.reply('正解です')
-        f = open('plugins/quiz00.json','r')
-        df = json.load(f)
-        f.close()
-        if userid in df.keys():
-            df[userid]["point"] += 8
-            df[userid]["seikai"] += 1
-            ff = open('plugins/quiz00.json','w')
-            json.dump(df, ff)
-            ff.close()
-        else:
-            df[userid] = { "point" : 8 , "seikai" : 1 , "fuseikai" : 0}
-            ff = open('plugins/quiz00.json','w')
-            json.dump(df, ff)
-            ff.close()
     elif textet != ans:
         message.reply('残念。正解は ' + ans)
-        f = open('plugins/quiz00.json','r')
-        df = json.load(f)
-        f.close()
-        if userid in df.keys():
-            df[userid]["fuseikai"] += 1
-        else:
-            df[userid] = { "point" : 0 , "seikai" : 0 , "fuseikai" : 1}
-            f = open('plugins/quiz00.json','w')
-            json.dump(df, f)
-            f.close()
     answait = 0
     risten = 0
 
@@ -192,44 +121,15 @@ def rhelp_func(message):
     message.send('quiz0:クイズ quiz1:物理 quiz2:化学 quiz3:生物 quiz4:日本史 quiz5:世界史 quiz6:地理')
     message.send('回答するときは、「a」を入力し、回答権を得たら「a:答え」のように入力します。')
     message.send('問題を飛ばしたいときは、「pass」と打ちます。')
-    message.send('自分のランクを見るときは「rank」、問題を作るときは「makeq0 問題 答え」のように入力します')
+    message.send('')
 
 @respond_to('pass')
 def rpas_func(message):
+    if answait == 0:
+        return
     global risten
     message.send('問題をパスします。')
     risten = 0
-
-@listen_to('!rank')
-def rank_func(message):
-    global userid
-    global dd
-    userid = message.body['user']
-    f =open('plugins/quiz00.json' , 'r')
-    dd = json.load(f)
-    if userid in dd.keys():
-        print('look for rank')
-    else:
-        message.reply('そのuserは存在しません。')
-        return
-    ran = dd[userid]["point"] // 15
-
-    message.reply('累計ポイント: ' + str(dd[userid]["point"]) + ' ランク: '+ str(ran))
-    f.close()
-@respond_to(r'^makeq0')
-def rmake_func(message):
-    global nanka
-    texting = message.body['text']
-    if texting == 'makeq0 ':
-        message.send(texting)
-        message.send('何らかのエラーが発生しました')
-        return
-    nanka,mo,ka= texting.split(" ")
-    qui = { mo : ka }
-    fin = codecs.open('plugins/quiz.json', 'a', "utf-8")
-    json.dump(qui, fin, ensure_ascii=False, indent=1)
-    message.send('保存完了')
-    fin.close()
 #ここまでquiz機能
 #ここからおまけ
 @respond_to('spnews')
@@ -252,10 +152,6 @@ def rspnews_func(message):
     f = open('plugins/quiz00.json','r')
     df = json.load(f)
     f.close()
-    df[userid]["point"] += 5
-    ff = open('plugins/quiz00.json','w')
-    json.dump(df, ff)
-    ff.close()
 
 @respond_to('itnews')
 def ritnews_func(message):
@@ -277,10 +173,6 @@ def ritnews_func(message):
     f = open('plugins/quiz00.json','r')
     df = json.load(f)
     f.close()
-    df[userid]["point"] += 5
-    ff = open('plugins/quiz00.json','w')
-    json.dump(df, ff)
-    ff.close()
 
 @respond_to('mainnews')
 def rmainnews_func(message):
@@ -302,7 +194,3 @@ def rmainnews_func(message):
     f = open('plugins/quiz00.json','r')
     df = json.load(f)
     f.close()
-    df[userid]["point"] += 5
-    ff = open('plugins/quiz00.json','w')
-    json.dump(df, ff)
-    ff.close()
