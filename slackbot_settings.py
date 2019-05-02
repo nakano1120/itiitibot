@@ -13,3 +13,6 @@ print(os.environ['PORT'])
 
 # プラグインスクリプトを置いてあるサブディレクトリ名のリスト
 PLUGINS = ['plugins']
+
+#テストだけど
+PORT = int(os.environ.get("PORT", 5000))
