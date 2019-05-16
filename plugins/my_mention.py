@@ -5,6 +5,7 @@ import re
 import json
 import codecs
 import feedparser
+from time import sleep 
 from slackbot.bot import respond_to     # @botname: で反応するデコーダ
 from slackbot.bot import listen_to      # チャネル内発言で反応するデコーダ
 from slackbot.bot import default_reply  # 該当する応答がない場合に反応するデコーダ
@@ -110,7 +111,6 @@ gas = {
     "お濃い抹茶ババロア白玉あずきの盛り合わせ":399,
     "お濃い抹茶ババロア":199,
     "ぷるぷる黒糖ゼリー":199,
-    "ぷるぷる黒糖ゼリー":299,
     "ソフトクリーム":279,
     "ソフトクリーム（ストロベリーソース）":299,
     "ソフトクリーム（黒糖きなこ）":299,
@@ -121,8 +121,174 @@ gas = {
     "味噌汁":159,
     "日替わりスープ":159,
     "納豆":79,
-    "とろろ":100,
+    "とろろ":100
 }
+kamisimo=[
+    "松島や",
+    "つらいです",
+    "駅の前",
+    "帰らなきゃ",
+    "竹やぶの",
+    "ヤッターマン",
+    "だったかな",
+    "ダッカルビ",
+    "いにしえの",
+    "八重桜",
+    "青くても",
+    "唐辛子",
+    "交差点",
+    "大失態",
+    "セーフかな",
+    "フィニッシュだ",
+    "学生です",
+    "ハイボール",
+    "中毒だ",
+    "踊り食い",
+    "アウトだろ"
+]
+naka=[
+    "ああ松島や",
+    "くるしい生活",
+    "新宿西口",
+    "ヨドバシカメラ",
+    "ナイジェリアから",
+    "なんか焼けたよ",
+    "確定申告",
+    "ひき肉食べて",
+    "チーズマシマシ",
+    "奈良の都の",
+    "あるべきものを",
+    "スクランブルで",
+    "本当に君は",
+    "おこった挙句",
+    "24歳",
+    "アル中カラカラ",
+    "ニンニク入れて",
+    "二人羽織で"
+]
+player=[
+    "三浦",
+    "田中",
+    "アフリカ人",
+    "くま",
+    "うさぎ",
+    "かめ",
+    "マサイ族",
+    "大分県知事",
+    "ロドリゲス",
+    "チャイコフスキー",
+    "いぬ",
+    "ねこ",
+    "ゴリラ",
+    "酔っ払い",
+    "犯人",
+    "先生"
+]
+mono=[
+    "レッドブル",
+    "モンスター(エナドリ)",
+    "伝説の剣",
+    "インスタントカメラ",
+    "アルミの玉",
+    "トロフィー",
+    "スマートフォン",
+    "PS4のコントローラー",
+    "ラッパ",
+    "つけまつげ",
+    "アイスティー",
+    "原付",
+    "ナイフのようなもの",
+    "バールのようなもの"
+]
+eat=[
+    "りんご",
+    "牛肉",
+    "バナナ",
+    "カレー",
+    "ししゃもフライ",
+    "テリヤキチキン",
+    "月見バーガー",
+    "ポテト",
+    "とんかつバーガー",
+    "きのこ",
+    "みそきゅうり"
+]
+place=[
+    "横浜",
+    "やまびこ村",
+    "東急沿線",
+    "東京",
+    "秋葉原",
+    "池袋",
+    "埼玉",
+    "群馬",
+    "千葉",
+    "名古屋",
+    "大阪",
+    "ベルリン",
+    "モスクワ",
+    "ニューヨーク",
+    "韓国"
+]
+bun1=[
+    "時は19世紀後半。<basyo>に<syujin>という少年がいました...\n\n",
+    "昔、<basyo>という場所に<syujin>という赤ん坊が生まれました。\n\n",
+    "これから、13ページの解説を始めます。このページでは、<syujin>の物語について説明します\n\n",
+    "「私の名前は、<syujin>です。18歳です。」<syujin>はごく普通の高校生。でも今日は何かが変だぞ？\n\n",
+    "<syujin>「<power>美味しいよね。ぼくだいすき。誰が作ったの？」\n\n",
+    "ある日、平和な<basyo>に事件が。<keyw>を用いた殺人が起きた。名探偵<syujin>、解決してくださいな！\n\n"
+]
+bun2=[
+    "<syujin>は<basyo>からなんとアフリカの奥地に連れ去られてしまいました。<teki>の仕業です。\n\n",
+    "<syujin>は<mikata>といっしょに、<teki>を倒すべく旅に出ました。\n\n",
+    "ちなみに<power>は<syujin>にとって命の源で、とても重要な食べものです。これがあると強くなります。\n\n",
+    "これは、<power>と<keyw>が重要になってきます。しっかり覚えましょう。\n\n",
+    "犯人は<teki>が主な候補で、警察は警戒を続けています。\n\n",
+    "「遅刻遅刻！」<syujin>は急いで家を出た。<mikata>が待っている。\n\n"
+]
+bun3=[
+    "<syujin>は敵を倒すべく、<teki>の住むところに行きました。\n\n",
+    "<syujin>は<power>を食べてフルパワー。霊長類最強です。\n\n",
+    "<power>が<teki>に盗まれてしまい、<syujin>たちは混乱してしまいます。\n\n",
+    "<syujin>「犯人はお前か」<teki>「よくわかったな。だがお前はここまでだ。」\n\n",
+    "「あぶなかった」なんとか<syujin>は助かりました。\n\n",
+    "「<basyo>に<teki>がきたぞ！」一斉にみんなは逃げ出します。\n\n"
+]
+bun4=[
+    "しかし<syujin>は<teki>に捕まり、後の<teki>の下っ端となってしまった...\n\n",
+    "<syujin>は無事<teki>を倒し、人質と盗まれた<power>を取り返した！\n\n",
+    "犯人<teki>は無事逮捕され、懲役4年の実刑判決が下っています。\n\n",
+    "<syujin>と<mikata>は恋に落ち、付き合うことになった。\n\n",
+    "「残念でした」<syujin>は<teki>の策略にはまってしまった。\n\n",
+    "<syujin>「おりゃ！」　バコーン なんと<keyw>を壊してしまい、逮捕されてしまいましたとさ。\n\n"   
+]
+@listen_to("あらすじ作り:")
+def arasuji_func(message):
+    text = message.body['text']
+    texten = text.replace('あらすじ作り:', '')
+    if texten=="":
+        return
+    syujin = texten
+    mikata = random.choice(list(player))
+    teki = random.choice(list(player))
+    keyw = random.choice(list(mono))
+    power = random.choice(list(eat))
+    basyo = random.choice(list(place))
+    sleep(0.5)
+    kan1=random.choice(list(bun1))
+    kan2=random.choice(list(bun2))
+    kan3=random.choice(list(bun3))
+    kan4=random.choice(list(bun4))
+    bun=">>>"+kan1+kan2+kan3+kan4+"おしまい"
+    buna=bun.replace('<syujin>', syujin)
+    bunb=buna.replace('<mikata>', mikata)
+    bunc=bunb.replace('<teki>', teki)
+    bund=bunc.replace('<keyw>', keyw)
+    bune=bund.replace('<power>', power)
+    bunf=bune.replace('<basyo>', basyo)
+    message.send(bunf)
+
+
 @listen_to('ガスト1000')
 def gast0_func(message):
     now = 0
@@ -157,6 +323,17 @@ def gast1_func(message):
 
             message.send(tabe + " ¥" + str(onezei))
 
+@listen_to('botここで一句')
+def haiku_func(message):
+    kk = random.choice(list(kamisimo))
+    nn = random.choice(list(naka))
+    ss = random.choice(list(kamisimo))
+    message.send(kk)
+    sleep(0.5)
+    message.send(nn)
+    sleep(0.5)
+    message.send(ss)
+    
 @listen_to('quiz0')
 def quiz0_func(message):
     message.send("本業はちょっとお休みします。")
@@ -305,3 +482,13 @@ def gastrr_func(message):
 
             message.send(tabe + " ¥" + str(onezei))
 
+@respond_to('botここで一句')
+def haikur_func(message):
+    kk = random.choice(list(kamisimo))
+    nn = random.choice(list(naka))
+    ss = random.choice(list(kamisimo))
+    message.send(kk)
+    sleep(0.5)
+    message.send(nn)
+    sleep(0.5)
+    message.send(ss)
